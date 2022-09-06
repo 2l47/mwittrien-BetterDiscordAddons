@@ -1,15 +1,10 @@
 /**
  * @name BDFDB
- * @author DevilBro
- * @authorId 278543574059057154
+ * @author DevilBro, 2l47
  * @version 2.5.8
  * @description Required Library for DevilBro's Plugins
- * @invite Jx3TjNS
- * @donate https://www.paypal.me/MircoWittrien
- * @patreon https://www.patreon.com/MircoWittrien
- * @website https://mwittrien.github.io/
- * @source https://github.com/mwittrien/BetterDiscordAddons/tree/master/Library/
- * @updateUrl https://mwittrien.github.io/BetterDiscordAddons/Library/0BDFDB.plugin.js
+ * @source https://github.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Library/
+ * @updateUrl https://raw.githubusercontent.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Library/0BDFDB.plugin.js
  */
 
 module.exports = (_ => {
@@ -1116,7 +1111,7 @@ module.exports = (_ => {
 				return {backup: fs.existsSync(path) && (fs.readFileSync(path) || "").toString(), hashIsSame: libHashes[fileName] && oldLibHashes[fileName] && libHashes[fileName] == oldLibHashes[fileName]};
 			};
 			const requestLibraryHashes = tryAgain => {
-				request("https://api.github.com/repos/mwittrien/BetterDiscordAddons/contents/Library/_res/", {headers: {"user-agent": "node.js"}}, (e, r, b) => {
+				request("https://api.github.com/repos/2l47/mwittrien-BetterDiscordAddons/contents/Library/_res/?ref=preserve-ShowHiddenChannels", {headers: {"user-agent": "node.js"}}, (e, r, b) => {
 					if ((e || !b || r.statusCode != 200) && tryAgain) return BDFDB.TimeUtils.timeout(_ => requestLibraryHashes(), 10000);
 					try {
 						b = JSON.parse(b);
@@ -1134,7 +1129,7 @@ module.exports = (_ => {
 				
 					const backupObj = getBackup(dataFileName, dataFilePath);
 					if (backupObj.backup && backupObj.hashIsSame) parseData(backupObj.backup);
-					else request.get(`https://mwittrien.github.io/BetterDiscordAddons/Library/_res/${dataFileName}`, (e, r, b) => {
+					else request.get(`https://raw.githubusercontent.com/2l47/mwittrien-BetterDiscordAddons/preserve-ShowHiddenChannels/Library/_res/${dataFileName}`, (e, r, b) => {
 						if ((e || !b || r.statusCode != 200) && tryAgain) return BDFDB.TimeUtils.timeout(_ => requestLibraryData(), 10000);
 						if (!e && b && r.statusCode == 200) {
 							if (backupObj.backup && backupObj.backup.replace(/\s/g, "") == b.replace(/\s/g, "")) {
@@ -1177,7 +1172,7 @@ module.exports = (_ => {
 				
 				const backupObj = getBackup(cssFileName, cssFilePath);
 				if (backupObj.backup && backupObj.hashIsSame) parseCSS(backupObj.backup);
-				else request.get(`https://mwittrien.github.io/BetterDiscordAddons/Library/_res/${cssFileName}`, (e, r, b) => {
+				else request.get(`https://github.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Library/_res/${cssFileName}`, (e, r, b) => {
 					if ((e || !b || r.statusCode != 200) && tryAgain) return BDFDB.TimeUtils.timeout(_ => requestLibraryData(), 10000);
 					if (!e && b && r.statusCode == 200) {
 						if (backupObj.backup && backupObj.backup.replace(/\s/g, "") == b.replace(/\s/g, "")) {
@@ -1198,7 +1193,7 @@ module.exports = (_ => {
 						else if (plugin.updateUrl) return plugin.updateUrl;
 						else {
 							let name = InternalData.PluginNameMap && InternalData.PluginNameMap[plugin.name] || plugin.name;
-							return `https://mwittrien.github.io/BetterDiscordAddons/Plugins/${name}/${name}.plugin.js`;
+							return `https://github.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Plugins/${name}/${name}.plugin.js`;
 						}
 					}
 					else return "";

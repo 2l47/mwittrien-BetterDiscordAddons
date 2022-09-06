@@ -1,8 +1,7 @@
 {
 	"PluginNameMap": {},
 	"PluginUrlMap": {
-		"BDFDB": "https://mwittrien.github.io/BetterDiscordAddons/Library/0BDFDB.plugin.js",
-		"ShowHiddenChannels": "https://mwittrien.github.io/BetterDiscordAddons/_DEAD/ShowHiddenChannels.plugin.js"
+		"BDFDB": "https://raw.githubusercontent.com/2l47/mwittrien-BetterDiscordAddons/preserve-ShowHiddenChannels/Library/0BDFDB.plugin.js"
 	},
 	"LibraryRequires": ["electron", "fs", "path", "process", "request"],
 	"DiscordObjects": {
