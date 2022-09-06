@@ -1096,6 +1096,10 @@
 			"connections": "connections-pPr4as",
 			"verifiedBadge": "verifiedBadge-mH2YpO"
 		},
+		"ShowHiddenChannels": {
+			"accessModal": "accessModal-w5HjsV",
+			"hiddenChannel": "hidden-9f2Dsa"
+		},
 		"SpotifyControls": {
 			"activityButton": "activityButton-5Fs4Aa",
 			"bar": "bar-g2ZMIm",
@@ -1594,6 +1598,8 @@
 		"_showconnectionsconnections": ["ShowConnections", "connections"],
 		"_showconnectionsicon": ["ShowConnections", "connectionIcon"],
 		"_showconnectionsverifiedbadge": ["ShowConnections", "verifiedBadge"],
+		"_showhiddenchannelsaccessmodal": ["ShowHiddenChannels", "accessModal"],
+		"_showhiddenchannelshiddenchannel": ["ShowHiddenChannels", "hiddenChannel"],
 		"_spellcheckerror": ["SpellCheck", "error"],
 		"_spellcheckoverlay": ["SpellCheck", "overlay"],
 		"_spotifycontrolsactivitybutton": ["SpotifyControls", "activityButton"],
