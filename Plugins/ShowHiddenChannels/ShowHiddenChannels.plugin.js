@@ -1,7 +1,7 @@
 /**
  * @name ShowHiddenChannels
  * @author DevilBro, 2l47
- * @version 3.2.6
+ * @version 3.2.7
  * @description Displays all hidden Channels, which can't be accessed due to Role Restrictions, this won't allow you to read them (impossible)
  * @source https://github.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Plugins/ShowHiddenChannels/
  * @updateUrl https://github.com/2l47/mwittrien-BetterDiscordAddons/raw/preserve-ShowHiddenChannels/Plugins/ShowHiddenChannels/ShowHiddenChannels.plugin.js
@@ -9,8 +9,8 @@
 
 module.exports = (_ => {
 	const changeLog = {
-		"added": {
-			"Modal and Settings": "Add Channel Type: Forum"
+		"fixed": {
+			"Channel List": "Fixed hidden channels not displaying"
 		}
 	};
 
@@ -191,7 +191,7 @@ module.exports = (_ => {
 			
 				this.patchedModules = {
 					before: {
-						Channels: "render",
+						ChannelList: "render",
 						ChannelCategoryItem: "type",
 						ChannelItem: "default",
 						VoiceUsers: "render"
@@ -365,7 +365,7 @@ module.exports = (_ => {
 				if (e.instance.props.channel && this.isChannelHidden(e.instance.props.channel.id)) return null;
 			}
 			
-			processChannels (e) {
+			processChannelList (e) {
 				if (!e.instance.props.guild || e.instance.props.guild.id.length < 16) return;
 				let show = !blackList.includes(e.instance.props.guild.id), sortAtBottom = this.settings.sortOrder.hidden == sortOrders.BOTTOM.value;
 				e.instance.props.guildChannels = new e.instance.props.guildChannels.constructor(e.instance.props.guildChannels.id, e.instance.props.guildChannels.hoistedSection.hoistedRows);
