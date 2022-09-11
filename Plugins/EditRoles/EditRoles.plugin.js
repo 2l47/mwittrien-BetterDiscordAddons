@@ -2,7 +2,7 @@
  * @name EditRoles
  * @author DevilBro
  * @authorId 278543574059057154
- * @version 1.1.0
+ * @version 1.1.2
  * @description Allows you to locally edit Roles
  * @invite Jx3TjNS
  * @donate https://www.paypal.me/MircoWittrien
@@ -62,19 +62,21 @@ module.exports = (_ => {
 			onLoad () {
 				this.patchedModules = {
 					before: {
+						RoleMention: "default",
+						AutocompleteRoleResult: "render",
 						MessageHeader: "default",
 						ChannelMembers: "render",
 						MemberListItem: "render",
 						UserPopoutBodySection: "default",
 						UserPopoutBody: "default"
+					},
+					after: {
+						RichRoleMention: "RoleMention"
 					}
 				};
 			}
 			
 			onStart () {
-				BDFDB.PatchUtils.patch(this, BDFDB.LibraryModules.GuildStore, "getGuild", {after: e => {
-					if (e.returnValue) e.returnValue = this.changeRolesInGuild(e.returnValue, true);
-				}});
 				BDFDB.PatchUtils.patch(this, BDFDB.LibraryModules.PermissionRoleUtils, "getHighestRole", {after: e => {
 					if (e.returnValue && changedRoles[e.returnValue.id]) {
 						let data = changedRoles[e.returnValue.id];
@@ -160,14 +162,15 @@ module.exports = (_ => {
 				if (e.subType == "useUserRolesItems") {
 					let [children, index] = BDFDB.ContextMenuUtils.findItem(e.returnvalue, {id: "roles"});
 					if (index > -1 && children[index].props && BDFDB.ArrayUtils.is(children[index].props.children)) for (let child of children[index].props.children) {
-						if (child && child.props && typeof child.props.label == "function") {
+						if (child && child.props && typeof child.props.label == "function" && changedRoles[child.props.id]) {
+							let data = changedRoles[child.props.id];
 							let renderLabel = child.props.label;
-							child.props.label = (...args) => {
+							child.props.label = BDFDB.TimeUtils.suppress((...args) => {
 								let label = renderLabel(...args);
-								let onContextMenu = typeof label.props.onContextMenu == "function" ? label.props.onContextMenu : (_ => {});
-								label.props.onContextMenu = event => BDFDB.LibraryModules.ContextMenuUtils.openContextMenu(event, e => BDFDB.ReactUtils.createElement(BDFDB.ModuleUtils.findByName("DeveloperContextMenu"), Object.assign({}, e2, {id: child.props.id})));
+								if (data.color && label.props.children[0] && label.props.children[0].props) label.props.children[0].props.color = BDFDB.ColorUtils.convert(data.color, "hex");
+								if (data.name && label.props.children[1] && label.props.children[1].props && label.props.children[1].props.children) label.props.children[1].props.children = data.name;
 								return label;
-							};
+							}, "Error in renderLabel of UserRolesItems", this);
 						}
 					}
 				}
@@ -213,6 +216,30 @@ module.exports = (_ => {
 					}),
 					e.returnvalue.props.children
 				].flat(10).filter(n => n);
+			}
+			
+			processRichRoleMention (e) {
+				if (e.instance.props.id && changedRoles[e.instance.props.id]) {
+					e.returnvalue.props.color = changedRoles[e.instance.props.id].color ? BDFDB.ColorUtils.convert(changedRoles[e.instance.props.id].color, "int") : e.returnvalue.props.color;
+					e.returnvalue.props.children[1] = changedRoles[e.instance.props.id].name || e.returnvalue.props.children[1];
+				}
+			}
+			
+			processRoleMention (e) {
+				if (e.instance.props.roleId && changedRoles[e.instance.props.roleId]) {
+					e.instance.props.roleColor = changedRoles[e.instance.props.roleId].color ? BDFDB.ColorUtils.convert(changedRoles[e.instance.props.roleId].color, "int") : e.instance.props.roleColor;
+					e.instance.props.children = [`@${changedRoles[e.instance.props.roleId].name || e.instance.props.children[1]}`];
+					if (e.instance.props.content && e.instance.props.content[0]) e.instance.props.content[0].content = `@${changedRoles[e.instance.props.roleId].name || e.instance.props.children[1]}`;
+				}
+			}
+			
+			processAutocompleteRoleResult (e) {
+				if (e.instance.props.role && changedRoles[e.instance.props.role.id]) {
+					e.instance.props.role = Object.assign({}, e.instance.props.role);
+					e.instance.props.role.color = changedRoles[e.instance.props.role.id].color ? BDFDB.ColorUtils.convert(changedRoles[e.instance.props.role.id].color, "int") : e.instance.props.role.color;
+					e.instance.props.role.colorString = changedRoles[e.instance.props.role.id].color ? BDFDB.ColorUtils.convert(changedRoles[e.instance.props.role.id].color, "hex") : e.instance.props.role.colorString;
+					e.instance.props.role.name = changedRoles[e.instance.props.role.id].name || e.instance.props.role.name;
+				}
 			}
 			
 			processChannelMembers (e) {
