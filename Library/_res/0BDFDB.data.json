@@ -1899,6 +1899,7 @@
 		"channeldisabled": ["ChannelContainer", "disabled"],
 		"channelheaderchannelname": ["ChatWindow", "channelName"],
 		"channelheaderchildren": ["HeaderBar", "children"],
+		"channelheadercursorpointer": ["ChatWindow", "cursorPointer"],
 		"channelheaderdivider": ["HeaderBar", "divider"],
 		"channelheaderheaderbar": ["HeaderBar", "container"],
 		"channelheaderheaderbarthemed": ["HeaderBar", "themed"],
