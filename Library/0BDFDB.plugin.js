@@ -853,51 +853,6 @@ module.exports = (_ => {
 					contentClassName: BDFDB.disCNS.changelogcontainer + BDFDB.disCN.modalminicontent,
 					footerDirection: Internal.LibraryComponents.Flex.Direction.HORIZONTAL,
 					children: BDFDB.ReactUtils.elementToReact(BDFDB.DOMUtils.create(changeLogHTML)),
-					footerChildren: (plugin == BDFDB || plugin == this || PluginStores.loaded[plugin.name] && PluginStores.loaded[plugin.name] == plugin && plugin.author == "DevilBro") && BDFDB.ReactUtils.createElement("div", {
-						className: BDFDB.disCN.changelogfooter,
-						children: [{
-							href: "https://www.paypal.me/MircoWittrien",
-							name: "PayPal",
-							icon: "PAYPAL"
-						}, {
-							href: "https://www.patreon.com/MircoWittrien",
-							name: "Patreon",
-							icon: "PATREON"
-						}, {
-							name: BDFDB.LanguageUtils.LibraryStringsFormat("send", "Solana"),
-							icon: "PHANTOM",
-							onClick: _ => {
-								BDFDB.LibraryRequires.electron.clipboard.write({text: InternalData.mySolana});
-								BDFDB.NotificationUtils.toast(BDFDB.LanguageUtils.LibraryStringsFormat("clipboard_success", "Phantom Wallet Key"), {
-									type: "success"
-								});
-							}
-						}, {
-							name: BDFDB.LanguageUtils.LibraryStringsFormat("send", "Ethereum"),
-							icon: "METAMASK",
-							onClick: _ => {
-								BDFDB.LibraryRequires.electron.clipboard.write({text: InternalData.myEthereum});
-								BDFDB.NotificationUtils.toast(BDFDB.LanguageUtils.LibraryStringsFormat("clipboard_success", "MetaMask Wallet Key"), {
-									type: "success"
-								});
-							}
-						}].map(data => BDFDB.ReactUtils.createElement(data.href ? Internal.LibraryComponents.Anchor : Internal.LibraryComponents.Clickable, {
-							className: BDFDB.disCN.changelogsociallink,
-							href: data.href || "",
-							onClick: !data.onClick ? (_ => {}) : data.onClick,
-							children: BDFDB.ReactUtils.createElement(Internal.LibraryComponents.TooltipContainer, {
-								text: data.name,
-								children: BDFDB.ReactUtils.createElement(Internal.LibraryComponents.SvgIcon, {
-									name: Internal.LibraryComponents.SvgIcon.Names[data.icon],
-									width: 16,
-									height: 16
-								})
-							})
-						})).concat(BDFDB.ReactUtils.createElement(Internal.LibraryComponents.TextElement, {
-							size: Internal.LibraryComponents.TextElement.Sizes.SIZE_12,
-							children: BDFDB.LanguageUtils.LibraryStrings.donate_message
-						}))
-					})
 				});
 			};
 			BDFDB.PluginUtils.addLoadingIcon = function (icon) {
