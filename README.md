@@ -5,7 +5,7 @@
 
 ## About
 
-This is a maintained fork of DevilBro's repository for his BetterDiscord plugins and themes. It features an up-to-date version of the BDFDB library as well as a working version of the [ShowHiddenChannels](https://github.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Plugins/ShowHiddenChannels) plugin.
+This is a maintained fork of DevilBro's repository for his BetterDiscord plugins and themes. It features an up-to-date version of the BDFDB library as well as a working version of the [ShowHiddenChannels](https://github.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Plugins/ShowHiddenChannels#readme) plugin.
 
 ## [Plugins](https://github.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Plugins/)
 ## [Themes](https://github.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Themes/)
