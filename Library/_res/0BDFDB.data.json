@@ -1129,6 +1129,7 @@
 		},
 		"StaffTag": {
 			"adminIcon": "admin-Kv1Hp_",
+			"forumCreatorIcon": "forumCreator-5sOT2A",
 			"groupOwnerIcon": "groupOwner-g6FlmA",
 			"managementIcon": "management-3fF_o8",
 			"ownerIcon": "owner-FfFh3B",
@@ -1632,6 +1633,7 @@
 		"_spotifycontrolstimeline": ["SpotifyControls", "timeline"],
 		"_spotifycontrolsvolumeslider": ["SpotifyControls", "volumeSlider"],
 		"_stafftagadminicon": ["StaffTag", "adminIcon"],
+		"_stafftagforumcreatoricon": ["StaffTag", "forumCreatorIcon"],
 		"_stafftaggroupownericon": ["StaffTag", "groupOwnerIcon"],
 		"_stafftagmanagementicon": ["StaffTag", "managementIcon"],
 		"_stafftagownericon": ["StaffTag", "ownerIcon"],

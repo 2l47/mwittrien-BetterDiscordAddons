@@ -1,7 +1,7 @@
 /**
  * @name BDFDB
  * @author DevilBro, 2l47
- * @version 2.5.9
+ * @version 2.6.0
  * @description Required Library for DevilBro's Plugins
  * @source https://github.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Library/
  * @updateUrl https://raw.githubusercontent.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Library/0BDFDB.plugin.js
@@ -3269,6 +3269,10 @@ module.exports = (_ => {
 				BDFDB.ChannelUtils.isThread = function (channelOrId) {
 					let channel = typeof channelOrId == "string" ? Internal.LibraryModules.ChannelStore.getChannel(channelOrId) : channelOrId;
 					return channel && channel.isThread();
+				};
+				BDFDB.ChannelUtils.isForumPost = function (channelOrId) {
+					let channel = typeof channelOrId == "string" ? Internal.LibraryModules.ChannelStore.getChannel(channelOrId) : channelOrId;
+					return channel && channel.parentChannelThreadType && channel.parentChannelThreadType == BDFDB.DiscordConstants.ChannelTypes.GUILD_FORUM;
 				};
 				BDFDB.ChannelUtils.isEvent = function (channelOrId) {
 					let channel = typeof channelOrId == "string" ? Internal.LibraryModules.GuildEventStore.getGuildScheduledEvent(channelOrId) : channelOrId;
