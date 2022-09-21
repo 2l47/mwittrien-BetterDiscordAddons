@@ -1,7 +1,7 @@
 /**
  * @name BDFDB
  * @author DevilBro, 2l47
- * @version 2.6.0
+ * @version 2.6.1
  * @description Required Library for DevilBro's Plugins
  * @source https://github.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Library/
  * @updateUrl https://raw.githubusercontent.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Library/0BDFDB.plugin.js
@@ -622,6 +622,7 @@ module.exports = (_ => {
 					if (!BDFDB.ObjectUtils.is(plugin)) return;
 					if (plugin == window.BDFDB_Global) {
 						if (Internal.removeChunkObserver) Internal.removeChunkObserver();
+						if (Internal.patchObserverData && Internal.patchObserverData.observer && typeof Internal.patchObserverData.observer.disconnect == "function") Internal.patchObserverData.observer.disconnect();
 						let updateNotice = BDFDB.dotCN && document.querySelector(BDFDB.dotCN.noticeupdate);
 						if (updateNotice) updateNotice.close();
 						BDFDB.TimeUtils.clear(PluginStores && PluginStores.updateData && PluginStores.updateData.interval);
@@ -2246,8 +2247,8 @@ module.exports = (_ => {
 						}
 					}
 					else {
-						let unmappedType = config.mappedType.split(" _ _ ")[1] || config.mappedType;
-						let constructor = BDFDB.ReactUtils.findConstructor(ins, unmappedType) || BDFDB.ReactUtils.findConstructor(ins, unmappedType, {up: true});
+						let trueType = config.mappedType.split(" _ _ ")[0];
+						let constructor = BDFDB.ReactUtils.findConstructor(ins, trueType) || BDFDB.ReactUtils.findConstructor(ins, trueType, {up: true});
 						if (constructor) {
 							Internal.patchComponent(pluginDataObjs, constructor, config);
 							BDFDB.PatchUtils.forceAllUpdates(pluginDataObjs.map(n => n.plugin), config.mappedType);
@@ -5816,6 +5817,8 @@ module.exports = (_ => {
 														"$day will be replaced with the Weekday Name",
 														"$dayS will be replaced with the Weekday Name (Short Form)",
 														"$agoAmount will be replaced with ('Today', 'Yesterday', 'x days/weeks/months ago')",
+														"$agoWeekday will be replaced with ('Today', 'Yesterday', $day)",
+														"$agoWeekdayS will be replaced with ('Today', 'Yesterday', $dayS)",
 														"$agoDays will be replaced with ('Today', 'Yesterday', 'x days ago')",
 														"$agoDate will be replaced with ('Today', 'Yesterday', $date)"
 													], {marginRight: 6}),
@@ -5985,6 +5988,8 @@ module.exports = (_ => {
 							.replace(/\$dayS/g, timeObj.toLocaleDateString(language, {weekday: "short"}))
 							.replace(/\$day/g, timeObj.toLocaleDateString(language, {weekday: "long"}))
 							.replace(/\$agoAmount/g, daysAgo < 0 ? "" : daysAgo > 1 ? Internal.DiscordObjects.Timestamp(timeObj.getTime()).fromNow() : BDFDB.LanguageUtils.LanguageStrings[`SEARCH_SHORTCUT_${daysAgo == 1 ? "YESTERDAY" : "TODAY"}`])
+							.replace(/\$agoWeekdayS/g, daysAgo < 0 ? "" : daysAgo > 1 ? timeObj.toLocaleDateString(language, {weekday: "short"}) : BDFDB.LanguageUtils.LanguageStrings[`SEARCH_SHORTCUT_${daysAgo == 1 ? "YESTERDAY" : "TODAY"}`])
+							.replace(/\$agoWeekday/g, daysAgo < 0 ? "" : daysAgo > 1 ? timeObj.toLocaleDateString(language, {weekday: "long"}) : BDFDB.LanguageUtils.LanguageStrings[`SEARCH_SHORTCUT_${daysAgo == 1 ? "YESTERDAY" : "TODAY"}`])
 							.replace(/\$agoDays/g, daysAgo < 0 ? "" : daysAgo > 1 ? BDFDB.LanguageUtils.LanguageStringsFormat(`GAME_LIBRARY_LAST_PLAYED_DAYS`, daysAgo) : BDFDB.LanguageUtils.LanguageStrings[`SEARCH_SHORTCUT_${daysAgo == 1 ? "YESTERDAY" : "TODAY"}`])
 							.replace(/\$agoDate/g, daysAgo < 0 ? "" : daysAgo > 1 ? date : BDFDB.LanguageUtils.LanguageStrings[`SEARCH_SHORTCUT_${daysAgo == 1 ? "YESTERDAY" : "TODAY"}`])
 							.replace(/\(\)|\[\]/g, "").replace(/,\s*$|^\s*,/g, "").replace(/ +/g, " ").trim();
