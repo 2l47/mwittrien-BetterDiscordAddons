@@ -372,9 +372,9 @@ module.exports = (_ => {
 											})
 										})
 									}),
-									BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.Status, {
+									BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.StatusComponents.Status, {
 										className: BDFDB.disCN._customstatuspresetsstatus,
-										status: presets[id].status || BDFDB.DiscordConstants.StatusTypes.ONLINE
+										status: presets[id].status || BDFDB.LibraryComponents.StatusComponents.Types.ONLINE
 									}),
 									BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.TextScroller, {
 										children: presets[id].text
@@ -390,8 +390,8 @@ module.exports = (_ => {
 									let date = new Date;
 									expiresAt = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).getTime() - date.getTime();
 								}
-								if (presets[id].status) BDFDB.LibraryModules.SettingsUtils.StatusSetting.updateSetting(presets[id].status);
-								BDFDB.LibraryModules.SettingsUtils.CustomStatusSetting.updateSetting({
+								if (presets[id].status) BDFDB.DiscordUtils.setSetting("status", "status", presets[id].status);
+								BDFDB.DiscordUtils.setSetting("status", "customStatus", {
 									text: presets[id].text && presets[id].text.length > 0 ? presets[id].text : "",
 									expiresAtMs: expiresAt ? BDFDB.DiscordObjects.Timestamp().add(expiresAt, "ms").toDate().getTime().toString() : "0",
 									emojiId: presets[id].emojiInfo ? presets[id].emojiInfo.id : "0",

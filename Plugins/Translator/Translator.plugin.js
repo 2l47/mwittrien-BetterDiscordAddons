@@ -676,7 +676,7 @@ module.exports = (_ => {
 			}
 			
 			processChannelTextAreaButtons (e) {
-				if (this.settings.general.addTranslateButton && (e.instance.props.type == BDFDB.LibraryComponents.ChannelTextAreaTypes.NORMAL || e.instance.props.type == BDFDB.LibraryComponents.ChannelTextAreaTypes.NORMAL_WITH_ACTIVITY || e.instance.props.type == BDFDB.LibraryComponents.ChannelTextAreaTypes.SIDEBAR) && !e.instance.props.disabled) {
+				if (this.settings.general.addTranslateButton && (e.instance.props.type == BDFDB.DiscordConstants.ChannelTextAreaTypes.NORMAL || e.instance.props.type == BDFDB.DiscordConstants.ChannelTextAreaTypes.NORMAL_WITH_ACTIVITY || e.instance.props.type == BDFDB.LibraryComponents.ChannelTextAreaTypes.SIDEBAR) && !e.instance.props.disabled) {
 					e.returnvalue.props.children.unshift(BDFDB.ReactUtils.createElement(TranslateButtonComponent, {
 						guildId: e.instance.props.channel.guild_id ? e.instance.props.channel.guild_id : "@me",
 						channelId: e.instance.props.channel.id
@@ -817,7 +817,7 @@ module.exports = (_ => {
 			getLanguageChoice (direction, place, channelId) {
 				this.setLanguages();
 				let choice;
-				let channel = channelId && BDFDB.LibraryModules.ChannelStore.getChannel(channelId);
+				let channel = channelId && BDFDB.LibraryStores.ChannelStore.getChannel(channelId);
 				let guildId = channel ? (channel.guild_id ? channel.guild_id : "@me") : null;
 				if (channelLanguages[channelId] && channelLanguages[channelId][place]) choice = channelLanguages[channelId][place][direction];
 				else if (guildId && guildLanguages[guildId] && guildLanguages[guildId][place]) choice = guildLanguages[guildId][place][direction];
@@ -828,7 +828,7 @@ module.exports = (_ => {
 			}
 
 			saveLanguageChoice (choice, direction, place, channelId) {
-				let channel = channelId && BDFDB.LibraryModules.ChannelStore.getChannel(channelId);
+				let channel = channelId && BDFDB.LibraryStores.ChannelStore.getChannel(channelId);
 				let guildId = channel ? (channel.guild_id ? channel.guild_id : "@me") : null;
 				if (channelLanguages[channelId] && channelLanguages[channelId][place]) {
 					channelLanguages[channelId][place][direction] = choice;
@@ -888,7 +888,7 @@ module.exports = (_ => {
 					callback(translation == text ? "" : translation, input, output);
 				};
 				let [newText, excepts, translate] = this.removeExceptions(text.trim(), place);
-				let channelId = BDFDB.LibraryModules.LastChannelStore.getChannelId();
+				let channelId = BDFDB.LibraryStores.SelectedChannelStore.getChannelId();
 				let input = Object.assign({}, languages[this.getLanguageChoice(languageTypes.INPUT, place, channelId)]);
 				let output = Object.assign({}, languages[this.getLanguageChoice(languageTypes.OUTPUT, place, channelId)]);
 				if (translate && input.id != output.id) {

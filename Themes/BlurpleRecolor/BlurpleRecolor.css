@@ -1225,35 +1225,6 @@ html .offerBadge-1KDtMz {									/* settingsitems		offer badge							*/
 
 /* ----		10.1.	USERMODAL						---- */
 
-.discordMemberCreatedAtIcon-126if8 {
-	background: transparent !important;
-	width: 24px !important;
-	height: 24px !important;
-	line-height: 24px !important;
-	padding: 0 !important;
-}
-.discordMemberCreatedAtText-15sN5q {
-	position: relative;
-	width: 100%;
-	overflow: hidden;
-}
-.discordMemberCreatedAtText-15sN5q > * {
-	position: absolute;
-	font-family: var(--font-primary);
-    font-size: 16px;
-    line-height: 24px;
-	font-weight: 600;
-	top: 0;
-	left: 0;
-	transition: top .5s;
-}
-.discordMemberCreatedAtText-15sN5q:not(:hover) > *:first-child {
-	top: -24px;
-}
-.discordMemberCreatedAtText-15sN5q:hover > *:last-child {
-	top: 24px;
-}
-
 .profileBadge-12r2Nm[src="/assets/48d5bdcffe9e7848067c2e187f1ef951.svg"],
 .profileBadge-2YySEb[src="/assets/48d5bdcffe9e7848067c2e187f1ef951.svg"] {
 	object-position: -999999px -999999px;
@@ -2676,6 +2647,21 @@ html .newBadge-1LcB6t[style*="background-color: hsl(235, "] {
 .bd-button:active,
 .bd-addon-modal-footer .bd-button:active {
 	background: var(--accentcolor-active);
+}
+
+.bd-description-wrap .banner {
+	background: var(--background-primary);
+	border-color: var(--background-secondary);
+    color: var(--header-secondary);
+    font-size: 14px;
+    line-height: 18px;
+}
+.banner.banner-danger {
+	background: var(--background-secondary);
+	border-color: rgb(var(--dangercolor));
+}
+.banner-danger .bd-icon {
+	fill: rgb(var(--dangercolor));
 }
 
 .bd-addon-views .bd-view-button.selected {

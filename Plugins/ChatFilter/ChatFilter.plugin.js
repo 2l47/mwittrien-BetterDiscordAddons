@@ -111,13 +111,13 @@ module.exports = (_ => {
 				words = BDFDB.DataUtils.load(this, "words");
 				for (let rType in this.defaults.replaces) if (!BDFDB.ObjectUtils.is(words[rType])) words[rType] = {};
 				
-				BDFDB.PatchUtils.patch(this, BDFDB.LibraryModules.StatusMetaUtils, "findActivity", {after: e => {
+				BDFDB.PatchUtils.patch(this, BDFDB.LibraryStores.PresenceStore, "findActivity", {after: e => {
 					if (this.settings.general.targetStatuses && e.returnValue && e.returnValue.state && e.returnValue.type === BDFDB.DiscordConstants.ActivityTypes.CUSTOM_STATUS) {
 						let {content} = this.parseMessage({
 							content: e.returnValue.state,
 							embeds: [],
 							id: "status",
-							author: BDFDB.LibraryModules.UserStore.getUser(e.methodArguments[0])
+							author: BDFDB.LibraryStores.UserStore.getUser(e.methodArguments[0])
 						});
 						if (content) return Object.assign({}, e.returnValue, {state: content});
 						else if (!e.returnValue.emoji) return null;
@@ -179,7 +179,7 @@ module.exports = (_ => {
 							title: `Added ${rType} Words`,
 							collapseStates: collapseStates,
 							children: BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.SettingsList, {
-								settings: Object.keys(configs).filter(n => !configs[n]["no" + BDFDB.LibraryModules.StringUtils.upperCaseFirstChar(rType)]),
+								settings: Object.keys(configs).filter(n => !configs[n]["no" + BDFDB.StringUtils.upperCaseFirstChar(rType)]),
 								data: Object.keys(words[rType]).map(wordValue => Object.assign({}, words[rType][wordValue], {
 									key: wordValue,
 									label: wordValue
@@ -255,7 +255,7 @@ module.exports = (_ => {
 									BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.Anchor, {href: "https://regexr.com/", children: BDFDB.LanguageUtils.LanguageStrings.HELP + "?"})
 								],
 							].map(string => BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.FormComponents.FormText, {
-								type: BDFDB.LibraryComponents.FormComponents.FormTextTypes.DESCRIPTION,
+								type: BDFDB.LibraryComponents.FormComponents.FormText.Types.DESCRIPTION,
 								children: string
 							}))
 						}));

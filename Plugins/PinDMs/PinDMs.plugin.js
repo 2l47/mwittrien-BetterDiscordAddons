@@ -157,7 +157,7 @@ module.exports = (_ => {
 			}
 			
 			onStart () {
-				BDFDB.PatchUtils.patch(this, BDFDB.LibraryModules.DirectMessageUnreadStore, "getUnreadPrivateChannelIds", {after: e => {
+				BDFDB.PatchUtils.patch(this, BDFDB.LibraryStores.PrivateChannelReadStateStore, "getUnreadPrivateChannelIds", {after: e => {
 					let sortedRecents = this.sortAndUpdate("guildList");
 					if (sortedRecents.length) {
 						const dms = [];
@@ -281,12 +281,12 @@ module.exports = (_ => {
 									children: currentCategory ? BDFDB.ContextMenuUtils.createItem(BDFDB.LibraryComponents.MenuItems.MenuItem, {
 										label: this.labels.context_unpinchannel,
 										id: BDFDB.ContextMenuUtils.createItemId(this.name, "unpin-channellist"),
-										color: BDFDB.LibraryComponents.MenuItems.Colors.DANGER,
+										color: BDFDB.DiscordConstants.MenuItemColors.DANGER,
 										action: _ => this.removeFromCategory(id, currentCategory, "channelList")
 									}) : BDFDB.ContextMenuUtils.createItem(BDFDB.LibraryComponents.MenuItems.MenuItem, {
 										label: this.labels.context_addtonewcategory,
 										id: BDFDB.ContextMenuUtils.createItemId(this.name, "new-channellist"),
-										color: BDFDB.LibraryComponents.MenuItems.Colors.BRAND,
+										color: BDFDB.DiscordConstants.MenuItemColors.BRAND,
 										action: _ => this.openCategorySettingsModal({
 											id: this.generateId("channelList"),
 											name: `${this.labels.header_pinneddms} #${categories.length + 1}`,
@@ -312,7 +312,7 @@ module.exports = (_ => {
 						BDFDB.ContextMenuUtils.createItem(BDFDB.LibraryComponents.MenuItems.MenuItem, {
 							label: this.labels[pinnedInGuild ? "context_unpinguild" : "context_pinguild"],
 							id: BDFDB.ContextMenuUtils.createItemId(this.name, pinnedInGuild ? "unpin-serverlist" : "pin-serverlist"),
-							color: pinnedInGuild ? BDFDB.LibraryComponents.MenuItems.Colors.DANGER : BDFDB.LibraryComponents.MenuItems.Colors.DEFAULT,
+							color: pinnedInGuild ? BDFDB.DiscordConstants.MenuItemColors.DANGER : BDFDB.DiscordConstants.MenuItemColors.DEFAULT,
 							action: _ => {
 								if (!pinnedInGuild) this.addPin(id, "guildList");
 								else this.removePin(id, "guildList");
@@ -448,7 +448,7 @@ module.exports = (_ => {
 							if (category && draggedCategory != category.id) {
 								let color = BDFDB.ColorUtils.convert(category.color, "RGBA");
 								let foundDMs = this.filterDMs(category.dms, !category.predefined);
-								let unreadAmount = this.settings.general.unreadAmount && BDFDB.ArrayUtils.sum(foundDMs.map(id => BDFDB.LibraryModules.UnreadChannelUtils.getMentionCount(id)));
+								let unreadAmount = this.settings.general.unreadAmount && BDFDB.ArrayUtils.sum(foundDMs.map(id => BDFDB.LibraryStores.ReadStateStore.getMentionCount(id)));
 								return category.predefined && foundDMs.length < 1 ? null : [
 									BDFDB.ReactUtils.createElement("h2", {
 										className: BDFDB.DOMUtils.formatClassName(BDFDB.disCN.dmchannelheadercontainer, BDFDB.disCN._pindmspinnedchannelsheadercontainer, category.collapsed && BDFDB.disCN._pindmspinnedchannelsheadercollapsed, color && BDFDB.disCN._pindmspinnedchannelsheadercolored, BDFDB.disCN.namecontainernamecontainer),
@@ -525,7 +525,7 @@ module.exports = (_ => {
 													BDFDB.ContextMenuUtils.createItem(BDFDB.LibraryComponents.MenuItems.MenuItem, {
 														label: BDFDB.LanguageUtils.LanguageStrings.DELETE_CATEGORY,
 														id: BDFDB.ContextMenuUtils.createItemId(this.name, "remove-category"),
-														color: BDFDB.LibraryComponents.MenuItems.Colors.DANGER,
+														color: BDFDB.DiscordConstants.MenuItemColors.DANGER,
 														action: _ => {
 															let newData = this.getPinnedChannels("channelList");
 															delete newData[category.id];
@@ -738,7 +738,7 @@ module.exports = (_ => {
 			}
 			
 			filterDMs (dms, removePredefined) {
-				return dms.filter(id => BDFDB.LibraryModules.ChannelStore.getChannel(id) && !(removePredefined && this.getPredefinedCategory(id)));
+				return dms.filter(id => BDFDB.LibraryStores.ChannelStore.getChannel(id) && !(removePredefined && this.getPredefinedCategory(id)));
 			}
 
 			addToCategory (id, category, type) {
@@ -767,11 +767,11 @@ module.exports = (_ => {
 			
 			getPredefinedCategory (id) {
 				if (!id || this.getChannelListCategory(id)) return "";
-				let channel = BDFDB.LibraryModules.ChannelStore.getChannel(id);
+				let channel = BDFDB.LibraryStores.ChannelStore.getChannel(id);
 				if (!channel) return "";
-				else if (this.settings.preCategories.friends.enabled && channel.isDM() && BDFDB.LibraryModules.RelationshipStore.isFriend(channel.recipients[0])) return "friends";
-				else if (this.settings.preCategories.blocked.enabled && channel.isDM() && BDFDB.LibraryModules.RelationshipStore.isBlocked(channel.recipients[0])) return "blocked";
-				else if (this.settings.preCategories.bots.enabled && channel.isDM() && (BDFDB.LibraryModules.UserStore.getUser(channel.recipients[0]) || {}).bot) return "bots";
+				else if (this.settings.preCategories.friends.enabled && channel.isDM() && BDFDB.LibraryStores.RelationshipStore.isFriend(channel.recipients[0])) return "friends";
+				else if (this.settings.preCategories.blocked.enabled && channel.isDM() && BDFDB.LibraryStores.RelationshipStore.isBlocked(channel.recipients[0])) return "blocked";
+				else if (this.settings.preCategories.bots.enabled && channel.isDM() && (BDFDB.LibraryStores.UserStore.getUser(channel.recipients[0]) || {}).bot) return "bots";
 				else if (this.settings.preCategories.groups.enabled && channel.isGroupDM()) return "groups";
 				return "";
 			}
@@ -792,7 +792,7 @@ module.exports = (_ => {
 				if (!BDFDB.equals(data, newData)) this.savePinnedChannels(newData, type);
 				if (type == "channelList" && Object.keys(this.settings.preCategories).some(type => this.settings.preCategories[type].enabled)) {
 					let predefinedDMs = {};
-					for (let channelId of BDFDB.LibraryModules.DirectMessageStore.getPrivateChannelIds()) {
+					for (let channelId of BDFDB.LibraryStores.PrivateChannelSortStore.getPrivateChannelIds()) {
 						let category = this.getPredefinedCategory(channelId);
 						if (category) {
 							if (!predefinedDMs[category]) predefinedDMs[category] = [];
@@ -813,7 +813,7 @@ module.exports = (_ => {
 			
 			sortDMsByTime (dms, type) {
 				if (dms.length > 1 && this.settings.recentOrder[type]) {
-					let timestamps = BDFDB.LibraryModules.DirectMessageStore.getPrivateChannelIds().reduce((newObj, channelId) => (newObj[channelId] = BDFDB.LibraryModules.UnreadChannelUtils.lastMessageId(channelId), newObj), {});
+					let timestamps = BDFDB.LibraryStores.PrivateChannelSortStore.getPrivateChannelIds().reduce((newObj, channelId) => (newObj[channelId] = BDFDB.LibraryStores.ReadStateStore.lastMessageId(channelId), newObj), {});
 					return [].concat(dms).sort(function (x, y) {
 						const xT = parseFloat(timestamps[x]), yT = parseFloat(timestamps[y]);
 						return xT > yT ? -1 : xT < yT ? 1 : 0;
@@ -920,7 +920,7 @@ module.exports = (_ => {
 				sortedDMs = sortedDMs.filter(n => n);
 				for (let pos in sortedDMs) {
 					newData[sortedDMs[pos]] = parseInt(pos);
-					if (BDFDB.LibraryModules.ChannelStore.getChannel(sortedDMs[pos])) existingDMs.push(sortedDMs[pos]);
+					if (BDFDB.LibraryStores.ChannelStore.getChannel(sortedDMs[pos])) existingDMs.push(sortedDMs[pos]);
 				}
 				if (!BDFDB.equals(data, newData)) this.savePinnedChannels(newData, this);
 				return this.sortDMsByTime(existingDMs, type);

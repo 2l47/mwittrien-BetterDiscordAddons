@@ -126,8 +126,8 @@ module.exports = (_ => {
 						_this.switchImages(this.props.modalInstance, this.props.offset);
 					},
 					children: [
-						this.props.loadedImage || BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.Spinner, {
-							type: BDFDB.LibraryComponents.Spinner.Type.SPINNING_CIRCLE
+						this.props.loadedImage || BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.SpinnerComponents.Spinner, {
+							type: BDFDB.LibraryComponents.SpinnerComponents.Types.SPINNING_CIRCLE
 						}),
 						BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.SvgIcon, {
 							className: BDFDB.disCNS._imageutilitiesswitchicon + BDFDB.disCN.svgicon,
@@ -687,8 +687,8 @@ module.exports = (_ => {
 
 			onUserContextMenu (e) {
 				if (e.instance.props.user && this.settings.places.userAvatars && e.subType == "useBlockUserItem") {
-					const guildId = BDFDB.LibraryModules.LastGuildStore.getGuildId();
-					const member = BDFDB.LibraryModules.MemberStore.getMember(guildId, e.instance.props.user.id);
+					const guildId = BDFDB.LibraryStores.SelectedGuildStore.getGuildId();
+					const member = BDFDB.LibraryStores.GuildMemberStore.getMember(guildId, e.instance.props.user.id);
 					let validUrls = this.filterUrls((e.instance.props.user.getAvatarURL(null, 4096) || "").replace(/\.webp|\.gif/, ".png"), BDFDB.LibraryModules.IconUtils.isAnimatedIconHash(e.instance.props.user.avatar) && e.instance.props.user.getAvatarURL(null, 4096, true), (e.instance.props.user.getAvatarURL(guildId, 4096) || "").replace(/\.webp|\.gif/, ".png"), member && member.avatar && BDFDB.LibraryModules.IconUtils.isAnimatedIconHash(member.avatar) && e.instance.props.user.getAvatarURL(guildId, 4096, true));
 					if (!validUrls.length) return;
 					
@@ -929,7 +929,7 @@ module.exports = (_ => {
 							}) : Object.keys(enabledEngines).map(key => BDFDB.ContextMenuUtils.createItem(BDFDB.LibraryComponents.MenuItems.MenuItem, {
 								label: this.defaults.engines[key].name,
 								id: BDFDB.ContextMenuUtils.createItemId(this.name, "search", key),
-								color: key == "_all" ? BDFDB.LibraryComponents.MenuItems.Colors.DANGER : BDFDB.LibraryComponents.MenuItems.Colors.DEFAULT,
+								color: key == "_all" ? BDFDB.DiscordConstants.MenuItemColors.DANGER : BDFDB.DiscordConstants.MenuItemColors.DEFAULT,
 								persisting: true,
 								action: event => {
 									const open = (url, k) => BDFDB.DiscordUtils.openLink(this.defaults.engines[k].url.replace(imgUrlReplaceString, this.defaults.engines[k].raw ? url : encodeURIComponent(url)), {minimized: event.shiftKey});
@@ -1069,7 +1069,7 @@ module.exports = (_ => {
 											let layerContainer = !event.shiftKey && BDFDB.DOMUtils.getParent(BDFDB.dotCN.itemlayercontainer, event.currentTarget)
 											let backdrop = layerContainer && layerContainer.querySelector(BDFDB.dotCN.backdrop);
 											if (backdrop) backdrop.click();
-											let channel = BDFDB.LibraryModules.ChannelStore.getChannel(viewedImage.channelId);
+											let channel = BDFDB.LibraryStores.ChannelStore.getChannel(viewedImage.channelId);
 											if (channel) BDFDB.LibraryModules.HistoryUtils.transitionTo(BDFDB.DiscordConstants.Routes.CHANNEL(channel.guild_id, channel.id, viewedImage.messageId));
 										}
 									})
@@ -1115,7 +1115,7 @@ module.exports = (_ => {
 					if (this.settings.viewerSettings.galleryMode && viewedImage) {
 						if (!cachedImages || cachedImages.channelId != viewedImage.channelId || cachedImages.amount && this.getImageIndex(cachedImages.all, viewedImage) == -1) {
 							BDFDB.TimeUtils.clear(viewedImageTimeout);
-							let channel = BDFDB.LibraryModules.ChannelStore.getChannel(viewedImage.channelId);
+							let channel = BDFDB.LibraryStores.ChannelStore.getChannel(viewedImage.channelId);
 							BDFDB.LibraryModules.APIUtils.get({
 								url: channel && channel.guild_id ? BDFDB.DiscordConstants.Endpoints.SEARCH_GUILD(channel && channel.guild_id) : BDFDB.DiscordConstants.Endpoints.SEARCH_CHANNEL(channel.id),
 								query: BDFDB.LibraryModules.APIEncodeUtils.stringify({
@@ -1208,8 +1208,8 @@ module.exports = (_ => {
 					if (e.instance.props.resized) {
 						let embed = BDFDB.DOMUtils.getParent(BDFDB.dotCN.embedfull, e.node);
 						if (embed) embed.style.setProperty("max-width", "unset", "important");
-						if (e.instance.state.readyState != BDFDB.LibraryComponents.Image.ImageReadyStates.READY) {
-							e.instance.state.readyState = BDFDB.LibraryComponents.Image.ImageReadyStates.READY;
+						if (e.instance.state.readyState != BDFDB.LibraryComponents.ImageComponents.ImageReadyStates.READY) {
+							e.instance.state.readyState = BDFDB.LibraryComponents.ImageComponents.ImageReadyStates.READY;
 							BDFDB.ReactUtils.forceUpdate(e.instance);
 						}
 					}
@@ -1568,7 +1568,7 @@ module.exports = (_ => {
 				viewedImage = cachedImages.all[cachedImages.index];
 				
 				if (offset > 0 && !cachedImages.lastReached && cachedImages.index == (cachedImages.amount - 1)) {
-					let channel = BDFDB.LibraryModules.ChannelStore.getChannel(viewedImage.channelId);
+					let channel = BDFDB.LibraryStores.ChannelStore.getChannel(viewedImage.channelId);
 					BDFDB.LibraryModules.APIUtils.get({
 						url: channel && channel.guild_id ? BDFDB.DiscordConstants.Endpoints.SEARCH_GUILD(channel && channel.guild_id) : BDFDB.DiscordConstants.Endpoints.SEARCH_CHANNEL(channel.id),
 						query: BDFDB.LibraryModules.APIEncodeUtils.stringify({
@@ -1598,7 +1598,7 @@ module.exports = (_ => {
 					});
 				}
 				if (offset < 0 && !cachedImages.firstReached && cachedImages.index == 0) {
-					let channel = BDFDB.LibraryModules.ChannelStore.getChannel(viewedImage.channelId);
+					let channel = BDFDB.LibraryStores.ChannelStore.getChannel(viewedImage.channelId);
 					BDFDB.LibraryModules.APIUtils.get({
 						url: channel && channel.guild_id ? BDFDB.DiscordConstants.Endpoints.SEARCH_GUILD(channel && channel.guild_id) : BDFDB.DiscordConstants.Endpoints.SEARCH_CHANNEL(channel.id),
 						query: BDFDB.LibraryModules.APIEncodeUtils.stringify({
@@ -1641,7 +1641,7 @@ module.exports = (_ => {
 					naturalWidth: viewedImage.width,
 					naturalHeight: viewedImage.height,
 					play: true,
-					playOnHover: !!BDFDB.LibraryModules.LocalSettingsStore.useReducedMotion
+					playOnHover: !!BDFDB.LibraryStores.AccessibilityStore.useReducedMotion
 				}));
 				BDFDB.ReactUtils.forceUpdate(modalInstance);
 			}

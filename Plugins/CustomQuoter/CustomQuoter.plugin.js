@@ -248,7 +248,7 @@ module.exports = (_ => {
 								"$timestamp will be replaced with the Formatted Timestamp of the quoted Message",
 								"$unixTimestamp will be replaced with the Unix Timestamp of the quoted Message"
 							].map(string => BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.FormComponents.FormText, {
-								type: BDFDB.LibraryComponents.FormComponents.FormTextTypes.DESCRIPTION,
+								type: BDFDB.LibraryComponents.FormComponents.FormText.Types.DESCRIPTION,
 								children: string
 							}))
 						}));
@@ -382,8 +382,8 @@ module.exports = (_ => {
 				
 				let quoteFormat = formats[choice] || formats.Standard || "";
 				
-				let guild = channel.guild_id ? (BDFDB.LibraryModules.GuildStore.getGuild(channel.guild_id) || {id: channel.guild_id, name: "Test Server"}) : {id: BDFDB.DiscordConstants.ME, name: BDFDB.LanguageUtils.LanguageStrings.DIRECT_MESSAGES};
-				let member = guild && BDFDB.LibraryModules.MemberStore.getMember(guild.id, message.author.id);
+				let guild = channel.guild_id ? (BDFDB.LibraryStores.GuildStore.getGuild(channel.guild_id) || {id: channel.guild_id, name: "Test Server"}) : {id: BDFDB.DiscordConstants.ME, name: BDFDB.LanguageUtils.LanguageStrings.DIRECT_MESSAGES};
+				let member = guild && BDFDB.LibraryStores.GuildMemberStore.getMember(guild.id, message.author.id);
 				
 				let content = message.content;
 				let selectedText = document.getSelection().toString().trim();
@@ -391,9 +391,9 @@ module.exports = (_ => {
 				if (content) {
 					content = content.replace(/(@everyone|@here)/g, "`$1`").replace(/``(@everyone|@here)``/g, "`$1`");
 					content = content.replace(/<@[!&]{0,1}([0-9]{10,})>/g, (string, match) => {
-						let user = BDFDB.LibraryModules.UserStore.getUser(match);
+						let user = BDFDB.LibraryStores.UserStore.getUser(match);
 						if (user) {
-							let userMember = channel.guild_id && BDFDB.LibraryModules.MemberStore.getMember(guild.id, match);
+							let userMember = channel.guild_id && BDFDB.LibraryStores.GuildMemberStore.getMember(guild.id, match);
 							return `@ ${userMember && userMember.nick || user.username}`;
 						}
 						else if (channel.guild_id && guild.roles[match] && guild.roles[match].name) return `${guild.roles[match].name.indexOf("@") == 0 ? "" : "@"} ${guild.roles[match].name}`;

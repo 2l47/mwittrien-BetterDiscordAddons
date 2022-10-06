@@ -87,9 +87,9 @@ module.exports = (_ => {
 						});
 					}
 				}});
-				BDFDB.PatchUtils.patch(this, BDFDB.LibraryModules.MemberStore, "getMember", {after: e => {
+				BDFDB.PatchUtils.patch(this, BDFDB.LibraryStores.GuildMemberStore, "getMember", {after: e => {
 					if (e.returnValue) {
-						let guild = BDFDB.LibraryModules.GuildStore.getGuild(e.methodArguments[0]);
+						let guild = BDFDB.LibraryStores.GuildStore.getGuild(e.methodArguments[0]);
 						if (guild) {
 							let colorRole, iconRole;
 							for (let id of e.returnValue.roles) {
@@ -199,7 +199,7 @@ module.exports = (_ => {
 									BDFDB.ContextMenuUtils.createItem(BDFDB.LibraryComponents.MenuItems.MenuItem, {
 										label: this.labels.submenu_resetsettings,
 										id: BDFDB.ContextMenuUtils.createItemId(this.name, "settings-reset"),
-										color: BDFDB.LibraryComponents.MenuItems.Colors.DANGER,
+										color: BDFDB.DiscordConstants.MenuItemColors.DANGER,
 										disabled: !changedRoles[e.instance.props.id],
 										action: event => {
 											let remove = _ => {
@@ -257,7 +257,7 @@ module.exports = (_ => {
 			
 			processMemberListItem (e) {
 				if (e.instance.props.user) {
-					let member = BDFDB.LibraryModules.MemberStore.getMember(e.instance.props.guildId, e.instance.props.user.id);
+					let member = BDFDB.LibraryStores.GuildMemberStore.getMember(e.instance.props.guildId, e.instance.props.user.id);
 					if (member) e.instance.props.colorString = member.colorString;
 				}
 			}
@@ -271,7 +271,7 @@ module.exports = (_ => {
 			}
 			
 			getGuildFromRoleId (roleId) {
-				return BDFDB.LibraryModules.FolderStore.getFlattenedGuilds().find(g => g.roles[roleId]);
+				return BDFDB.LibraryModules.SortedGuildUtils.getFlattenedGuilds().find(g => g.roles[roleId]);
 			}
 			
 			changeRolesInGuild (guild, useNative) {
@@ -300,7 +300,7 @@ module.exports = (_ => {
 					BDFDB.DataUtils.remove(this, "roles", id);
 				}
 				else {
-					for (let guild of BDFDB.LibraryModules.FolderStore.getFlattenedGuilds()) if (cachedRoles[guild.id]) guild.roles = cachedRoles[guild.id];
+					for (let guild of BDFDB.LibraryModules.SortedGuildUtils.getFlattenedGuilds()) if (cachedRoles[guild.id]) guild.roles = cachedRoles[guild.id];
 					cachedRoles = {};
 					BDFDB.DataUtils.remove(this, "roles");
 				}
@@ -361,7 +361,7 @@ module.exports = (_ => {
 										BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.FormComponents.FormTitle, {
 											className: BDFDB.disCN.marginreset,
 											tag: BDFDB.LibraryComponents.FormComponents.FormTitle.Tags.H5,
-											children: BDFDB.LibraryModules.LanguageStore.Messages.FORM_LABEL_ROLE_ICON
+											children: BDFDB.LanguageUtils.LanguageStrings.FORM_LABEL_ROLE_ICON
 										}),
 										BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.SettingsItem, {
 											type: "Switch",

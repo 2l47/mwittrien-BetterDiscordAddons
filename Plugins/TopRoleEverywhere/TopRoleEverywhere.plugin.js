@@ -197,12 +197,12 @@ module.exports = (_ => {
 
 			injectRoleTag (children, user, type, insertIndex, config = {}) {
 				if (!BDFDB.ArrayUtils.is(children) || !user) return;
-				let guild = BDFDB.LibraryModules.GuildStore.getGuild(BDFDB.LibraryModules.LastGuildStore.getGuildId());
+				let guild = BDFDB.LibraryStores.GuildStore.getGuild(BDFDB.LibraryStores.SelectedGuildStore.getGuildId());
 				if (!guild || user.bot && this.settings.general.disableForBots) return;
 				let role = BDFDB.LibraryModules.PermissionRoleUtils.getHighestRole(guild, user.id);
 				if (this.settings.general.showOwnerRole && user.id == guild.ownerId) role = Object.assign({}, role, {name: BDFDB.LanguageUtils.LanguageStrings.GUILD_OWNER, ownerRole: true});
 				if (role && !role.colorString && !this.settings.general.includeColorless && !role.ownerRole) {
-					let member = BDFDB.LibraryModules.MemberStore.getMember(guild.id, user.id);
+					let member = BDFDB.LibraryStores.GuildMemberStore.getMember(guild.id, user.id);
 					if (member) for (let sortedRole of BDFDB.ArrayUtils.keySort(member.roles.map(roleId => guild.getRole(roleId)), "position").reverse()) if (sortedRole.colorString) {
 						role = sortedRole;
 						break;
@@ -232,18 +232,18 @@ module.exports = (_ => {
 							color: isBright && this.settings.general.useBlackFont ? "black" : null
 						},
 						tag: role.name,
-						onContextMenu: role.id ? e => {this.openRoleContextMenu(e, role);} : null
+						onContextMenu: role.id ? event => this.openRoleContextMenu(event, role) : null
 					});
 				}
 				else return BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.MemberRole, {
 					className: BDFDB.DOMUtils.formatClassName(BDFDB.disCN._toproleseverywheretag, BDFDB.disCN[`_toproleseverywhere${type}tag`], BDFDB.disCN._toproleseverywhererolestyle),
 					role: role,
-					onContextMenu: role.id ? e => {this.openRoleContextMenu(e, role);} : null
+					onContextMenu: role.id ? event => this.openRoleContextMenu(event, role) : null
 				});
 			}
 			
-			openRoleContextMenu (e, role) {
-				BDFDB.LibraryModules.ContextMenuUtils.openContextMenu(e, function (e) {
+			openRoleContextMenu (event, role) {
+				BDFDB.LibraryModules.ContextMenuUtils.openContextMenu(event, function (e) {
 					return BDFDB.ReactUtils.createElement(BDFDB.ModuleUtils.findByName("DeveloperContextMenu"), Object.assign({}, e, {id: role.id}));
 				});
 			}

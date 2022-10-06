@@ -170,8 +170,8 @@ module.exports = (_ => {
 							justify: BDFDB.LibraryComponents.Flex.Justify.CENTER,
 							style: {marginTop: "50%"},
 							children: [
-								BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.Spinner, {
-									type: BDFDB.LibraryComponents.Spinner.Type.WANDERING_CUBES
+								BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.SpinnerComponents.Spinner, {
+									type: BDFDB.LibraryComponents.SpinnerComponents.Types.WANDERING_CUBES
 								}),
 								BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.TextElement, {
 									className: BDFDB.disCN.margintop20,
@@ -830,7 +830,7 @@ module.exports = (_ => {
 						delete plugin.thumbnail_url;
 						BDFDB.LibraryRequires.request(plugin.rawSourceUrl, (error, response, body) => {
 							if (body && body.indexOf("404: Not Found") != 0 && response.statusCode == 200) {
-								plugin.name = BDFDB.LibraryModules.StringUtils.upperCaseFirstChar((/@name\s+([^\t^\r^\n]+)|\/\/\**META.*["']name["']\s*:\s*["'](.+?)["']/i.exec(body) || []).filter(n => n)[1] || plugin.name || "");
+								plugin.name = BDFDB.StringUtils.upperCaseFirstChar((/@name\s+([^\t^\r^\n]+)|\/\/\**META.*["']name["']\s*:\s*["'](.+?)["']/i.exec(body) || []).filter(n => n)[1] || plugin.name || "");
 								plugin.authorname = (/@author\s+(.+)|\/\/\**META.*["']author["']\s*:\s*["'](.+?)["']/i.exec(body) || []).filter(n => n)[1] || plugin.author.display_name || plugin.author;
 								const version = (/@version\s+(.+)|\/\/\**META.*["']version["']\s*:\s*["'](.+?)["']/i.exec(body) || []).filter(n => n)[1];
 								if (version) {

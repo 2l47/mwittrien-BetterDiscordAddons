@@ -133,8 +133,8 @@ module.exports = (_ => {
 					let audio = new Audio;
 					audio.src = this._src && this._src.startsWith("data") ? this._src.replace(/ /g, "") : this._src;
 					audio.onloadeddata = _ => {
-						audio.volume = Math.min((BDFDB.LibraryModules.MediaDeviceUtils.getOutputVolume() / 100) * (this._volume / 100) * (volumes.globalVolume / 100), 1);
-						BDFDB.LibraryModules.PlatformUtils.embedded && audio.setSinkId(currentDevice || defaultDevice);
+						audio.volume = Math.min((BDFDB.LibraryStores.MediaEngineStore.getOutputVolume() / 100) * (this._volume / 100) * (volumes.globalVolume / 100), 1);
+						BDFDB.DiscordUtils.isPlaformEmbedded() && audio.setSinkId(currentDevice || defaultDevice);
 						callback(audio);
 					};
 					audio.onerror = _ => errorCallback(new Error("could not play audio"));
@@ -161,12 +161,12 @@ module.exports = (_ => {
 				const soundKeys = BDFDB.LibraryModules.SoundParser.keys();
 				for (let key of soundKeys) {	
 					const id = key.replace("./", "").replace(".mp3", "");
-					const name = id == "reconnect" ? "Invited To Speak" : id.replace("ddr-", "HotKeys_").replace("ptt_", "Push2Talk_").split("_").map(BDFDB.LibraryModules.StringUtils.upperCaseFirstChar).join(" ").replace(/1$/g, "");
+					const name = id == "reconnect" ? "Invited To Speak" : id.replace("ddr-", "HotKeys_").replace("ptt_", "Push2Talk_").split("_").map(BDFDB.StringUtils.upperCaseFirstChar).join(" ").replace(/1$/g, "");
 					const src = BDFDB.LibraryModules.SoundParser(key);	
 					
 					let soundPackName = id.split("_")[0];
 					if (soundPackName != id && soundKeys.filter(n => n.indexOf(`./${soundPackName}`) > -1).length > 10) {
-						soundPackName = BDFDB.LibraryModules.StringUtils.upperCaseFirstChar(soundPackName);
+						soundPackName = BDFDB.StringUtils.upperCaseFirstChar(soundPackName);
 						if (!defaultAudios[soundPackName]) defaultAudios[soundPackName] = {};
 						defaultAudios[soundPackName][name.replace(new RegExp(`${soundPackName} `, "i"), "").replace(/bootup/i, "Discodo")] = src;
 					}
@@ -196,12 +196,12 @@ module.exports = (_ => {
 			}
 			
 			onStart () {
-				if (BDFDB.LibraryModules.PlatformUtils.embedded) {
+				if (BDFDB.DiscordUtils.isPlaformEmbedded()) {
 					let change = _ => {
 						if (window.navigator.mediaDevices && window.navigator.mediaDevices.enumerateDevices) {
 							window.navigator.mediaDevices.enumerateDevices().then(enumeratedDevices => {
-								let id = BDFDB.LibraryModules.MediaDeviceUtils.getOutputDeviceId();
-								let allDevices = BDFDB.LibraryModules.MediaDeviceUtils.getOutputDevices();
+								let id = BDFDB.LibraryStores.MediaEngineStore.getOutputDeviceId();
+								let allDevices = BDFDB.LibraryStores.MediaEngineStore.getOutputDevices();
 								let filteredDevices = enumeratedDevices.filter(d => d.kind == "audiooutput" && d.deviceId != "communications");
 								let deviceIndex = BDFDB.LibraryModules.ArrayUtils(allDevices).sortBy(d => d.index).findIndex(d => d.id == id);
 								let deviceViaId = allDevices[id];
@@ -213,7 +213,7 @@ module.exports = (_ => {
 							});
 						}
 					};
-					BDFDB.StoreChangeUtils.add(this, BDFDB.LibraryModules.MediaDeviceUtils, change);
+					BDFDB.StoreChangeUtils.add(this, BDFDB.LibraryStores.MediaEngineStore, change);
 					change();
 				}
 				
@@ -221,11 +221,11 @@ module.exports = (_ => {
 					if (BDFDB.ObjectUtils.is(e.methodArguments[0]) && e.methodArguments[0].type == "MESSAGE_CREATE" && e.methodArguments[0].message) {
 						const message = e.methodArguments[0].message;
 						const guildId = message.guild_id || null;
-						if (message.author.id != BDFDB.UserUtils.me.id && !BDFDB.LibraryModules.RelationshipStore.isBlocked(message.author.id)) {
-							const channel = BDFDB.LibraryModules.ChannelStore.getChannel(message.channel_id);
+						if (message.author.id != BDFDB.UserUtils.me.id && !BDFDB.LibraryStores.RelationshipStore.isBlocked(message.author.id)) {
+							const channel = BDFDB.LibraryStores.ChannelStore.getChannel(message.channel_id);
 							const isGroupDM = channel.isGroupDM();
-							const muted = BDFDB.ChannelUtils.isThread(channel) ? BDFDB.LibraryModules.ThreadConfigStore.isMuted(channel.id) : BDFDB.LibraryModules.MutedUtils.isGuildOrCategoryOrChannelMuted(guildId, channel.id);
-							const focused = document.hasFocus() && BDFDB.LibraryModules.LastChannelStore.getChannelId() == channel.id;
+							const muted = BDFDB.ChannelUtils.isThread(channel) ? BDFDB.LibraryStores.JoinedThreadsStore.isMuted(channel.id) : BDFDB.LibraryStores.UserGuildSettingsStore.isGuildOrCategoryOrChannelMuted(guildId, channel.id);
+							const focused = document.hasFocus() && BDFDB.LibraryStores.SelectedChannelStore.getChannelId() == channel.id;
 							if (!guildId && !muted && !(choices[isGroupDM ? "groupdm" : "dm"].focus && focused)) {
 								this.fireEvent(isGroupDM ? "groupdm" : "dm");
 								this.playAudio(isGroupDM ? "groupdm" : "dm");
@@ -245,15 +245,15 @@ module.exports = (_ => {
 											return;
 										}
 									}
-									if (message.mention_roles.length && !BDFDB.LibraryModules.MutedUtils.isSuppressRolesEnabled(guildId, channel.id) && (!muted || choices.role.force) && !(choices.role.focus && focused)) {
-										const member = BDFDB.LibraryModules.MemberStore.getMember(guildId, BDFDB.UserUtils.me.id);
+									if (message.mention_roles.length && !BDFDB.LibraryStores.UserGuildSettingsStore.isSuppressRolesEnabled(guildId, channel.id) && (!muted || choices.role.force) && !(choices.role.focus && focused)) {
+										const member = BDFDB.LibraryStores.GuildMemberStore.getMember(guildId, BDFDB.UserUtils.me.id);
 										if (member && member.roles.length) for (const roleId of message.mention_roles) if (member.roles.includes(roleId)) {
 											this.fireEvent("role");
 											this.playAudio("role");
 											return;
 										}
 									}
-									if (message.mention_everyone && !BDFDB.LibraryModules.MutedUtils.isSuppressEveryoneEnabled(guildId, channel.id)) {
+									if (message.mention_everyone && !BDFDB.LibraryStores.UserGuildSettingsStore.isSuppressEveryoneEnabled(guildId, channel.id)) {
 										if (message.content.indexOf("@everyone") > -1 && (!muted || choices.everyone.force) && !(choices.everyone.focus && focused)) {
 											this.fireEvent("everyone");
 											this.playAudio("everyone");
@@ -266,7 +266,7 @@ module.exports = (_ => {
 										}
 									}
 								}
-								if (BDFDB.LibraryModules.MutedUtils.allowAllMessages(channel) && (!muted || choices.message1.force) && !(choices.message1.focus && focused)) {
+								if (BDFDB.LibraryStores.UserGuildSettingsStore.allowAllMessages(channel) && (!muted || choices.message1.force) && !(choices.message1.focus && focused)) {
 									this.fireEvent("message1");
 									this.playAudio("message1");
 									return;
@@ -316,7 +316,7 @@ module.exports = (_ => {
 				if (callListenerModule) {
 					callListenerModule.terminate();
 					BDFDB.PatchUtils.patch(this, callListenerModule, "handleRingUpdate", {instead: e => {
-						if (BDFDB.LibraryModules.CallUtils.getCalls().filter(call => call.ringing.length > 0 && BDFDB.LibraryModules.VoiceUtils.getCurrentClientVoiceChannelId() === call.channelId).length > 0 && !BDFDB.LibraryModules.SoundStateUtils.isSoundDisabled("call_calling") && !BDFDB.LibraryModules.StreamerModeStore.disableSounds) {
+						if (BDFDB.LibraryStores.CallStore.getCalls().filter(call => call.ringing.length > 0 && BDFDB.LibraryStores.SortedVoiceStateStore.getCurrentClientVoiceChannelId() === call.channelId).length > 0 && !BDFDB.LibraryStores.NotificationSettingsStore.isSoundDisabled("call_calling") && !BDFDB.LibraryStores.StreamerModeStore.disableSounds) {
 							createdAudios["call_calling"].loop();
 						}
 						else createdAudios["call_calling"].stop();
@@ -489,10 +489,10 @@ module.exports = (_ => {
 											mini: true,
 											grow: 0,
 											label: "Mute in",
-											labelChildren: BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.Status, {
+											labelChildren: BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.StatusComponents.Status, {
 												style: {marginLeft: 6},
 												size: 12,
-												status: BDFDB.DiscordConstants.StatusTypes.DND
+												status: BDFDB.LibraryComponents.StatusComponents.Types.DND
 											}),
 											value: choices[type].mute,
 											onChange: value => {
@@ -714,15 +714,15 @@ module.exports = (_ => {
 			}
 
 			playAudio (type) {
-				if (this.dontPlayAudio(type) || BDFDB.LibraryModules.StreamerModeStore.disableSounds) return;
+				if (this.dontPlayAudio(type) || BDFDB.LibraryStores.StreamerModeStore.disableSounds) return;
 				if (createdAudios[type]) createdAudios[type].stop();
 				createdAudios[type] = new WebAudioSound(type);
 				createdAudios[type].play();
 			}
 			
 			isSuppressMentionsEnabled (guildId, channelId) {
-				let channelSettings = BDFDB.LibraryModules.MutedUtils.getChannelMessageNotifications(guildId, channelId);
-				return channelSettings && (channelSettings == BDFDB.DiscordConstants.UserNotificationSettings.NO_MESSAGES || channelSettings == BDFDB.DiscordConstants.UserNotificationSettings.NULL && BDFDB.LibraryModules.MutedUtils.getMessageNotifications(guildId) == BDFDB.DiscordConstants.UserNotificationSettings.NO_MESSAGES);
+				let channelSettings = BDFDB.LibraryStores.UserGuildSettingsStore.getChannelMessageNotifications(guildId, channelId);
+				return channelSettings && (channelSettings == BDFDB.DiscordConstants.UserNotificationSettings.NO_MESSAGES || channelSettings == BDFDB.DiscordConstants.UserNotificationSettings.NULL && BDFDB.LibraryStores.UserGuildSettingsStore.getMessageNotifications(guildId) == BDFDB.DiscordConstants.UserNotificationSettings.NO_MESSAGES);
 			}
 
 			dontPlayAudio (type) {

@@ -81,7 +81,7 @@ module.exports = (_ => {
 			}
 			
 			processRichUserMention (e) {
-				if (e.instance.props.id && BDFDB.LibraryModules.UserStore.getUser(e.instance.props.id)) return BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.UserMention, {
+				if (e.instance.props.id && BDFDB.LibraryStores.UserStore.getUser(e.instance.props.id)) return BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.UserMention, {
 					className: "mention",
 					userId: e.instance.props.id,
 					channelId: e.instance.props.channelId,
@@ -92,11 +92,11 @@ module.exports = (_ => {
 			
 			processRichRoleMention (e) {
 				if (e.instance.props.id && e.instance.props.guildId && e.instance.props.id != e.instance.props.guildId) {
-					let guild = BDFDB.LibraryModules.GuildStore.getGuild(e.instance.props.guildId);
+					let guild = BDFDB.LibraryStores.GuildStore.getGuild(e.instance.props.guildId);
 					let channelId = e.instance.props.channelId;
 					if (!channelId) {
-						let currentChannelId = BDFDB.LibraryModules.LastChannelStore.getChannelId();
-						channelId = BDFDB.LibraryModules.GuildChannelStore.getSelectableChannelIds(guild.id).indexOf(currentChannelId) > -1 ? currentChannelId : BDFDB.LibraryModules.GuildChannelStore.getDefaultChannel(guild.id).id;
+						let currentChannelId = BDFDB.LibraryStores.SelectedChannelStore.getChannelId();
+						channelId = BDFDB.LibraryStores.GuildChannelStore.getSelectableChannelIds(guild.id).indexOf(currentChannelId) > -1 ? currentChannelId : BDFDB.LibraryStores.GuildChannelStore.getDefaultChannel(guild.id).id;
 					}
 					return BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.RoleMention, {
 						type: "mention_textarea",
