@@ -8,7 +8,6 @@
  - [Chat Filter](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/ChatFilter) - Allows you to censor Words or block complete Messages/Statuses
  - [Complete Timestamps](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/CompleteTimestamps) - Replaces Timestamps with your own custom Timestamps
  - [Copy Raw Message](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/CopyRawMessage) - Allows you to copy the raw Contents of a Message
- - [Creation Date](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/CreationDate) - Displays the Creation Date of an Account in the UserPopout and UserModal
  - [Custom Quoter](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/CustomQuoter) - Brings back the Quote Feature and allows you to set your own Quote Formats
  - [Custom Status Presets](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/CustomStatusPresets) - Allows you to save Custom Statuses as Quick Select
  - [Display Servers As Channels](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/DisplayServersAsChannels) - Displays Servers in a similar way as Channels
@@ -23,7 +22,6 @@
  - [Google Search Replace](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/GoogleSearchReplace) - Replaces the default Google Text Search with a custom Search Engine
  - [Hide Muted Categories](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/HideMutedCategories) - Hides muted Categories, if muted Channels are hidden
  - [Image Utilities](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/ImageUtilities) - Adds several Utilities for Images/Videos (Gallery, Download, Reverse Search, Zoom, Copy, etc.)
- - [Joined At Date](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/JoinedAtDate) - Displays the Joined At Date of a Member in the UserPopout and UserModal
  - [Last Message Date](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/LastMessageDate) - Displays the Last Message Date of a Member for the current Server/DM in the UserPopout and UserModal
  - [Message Utilities](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/MessageUtilities) - Adds several Quick Actions for Messages (Delete, Edit, Pin, etc.)
  - [Notification Sounds](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/NotificationSounds) - Allows you to replace the native Sounds with custom Sounds
@@ -49,7 +47,6 @@
  - [Spotify Controls](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/SpotifyControls) - Adds a Control Panel while listening to Spotify on a connected Account
  - [Staff Tag](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/StaffTag) - Adds a Crown/Tag to Server Owners (or Admins/Management)
  - [Theme Repo](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/ThemeRepo) - Allows you to download all Themes from BD's Website within Discord
- - [Theme Settings](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/ThemeSettings) - Allows you to change Theme Variables within Discord
  - [Timed Light Dark Mode](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/TimedLightDarkMode) - Adds a Time Slider to the Appearance Settings
  - [Top Role Everywhere](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/TopRoleEverywhere) - Adds the highest Role of a User as a Tag
  - [Translator](https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/Translator) - Allows you to translate Messages and your outgoing Messages within Discord

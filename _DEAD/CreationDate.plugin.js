@@ -1,21 +1,13 @@
 /**
- * @name ServerCounter
+ * @name CreationDate
  * @author DevilBro
  * @authorId 278543574059057154
- * @version 1.0.5
- * @description Adds a Server Counter to the Server List
- * @invite Jx3TjNS
- * @donate https://www.paypal.me/MircoWittrien
- * @patreon https://www.patreon.com/MircoWittrien
- * @website https://mwittrien.github.io/
- * @source https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/ServerCounter/
- * @updateUrl https://mwittrien.github.io/BetterDiscordAddons/Plugins/ServerCounter/ServerCounter.plugin.js
+ * @version 9.9.9
+ * @description PLUGIN WAS DISCONTINUED
  */
 
 module.exports = (_ => {
-	const changeLog = {
-		
-	};
+	const changeLog = {};
 
 	return !window.BDFDB_Global || (!window.BDFDB_Global.loaded && !window.BDFDB_Global.started) ? class {
 		constructor (meta) {for (let key in meta) this[key] = meta[key];}
@@ -56,33 +48,29 @@ module.exports = (_ => {
 			return template.content.firstElementChild;
 		}
 	} : (([Plugin, BDFDB]) => {
-		return class ServerCounter extends Plugin {
-			onLoad () {
-				this.patchedModules = {
-					after: {
-						Guilds: "type"
-					}
-				};
-			}
+		return class CreationDate extends Plugin {
+			onLoad () {}
 			
 			onStart () {
-				BDFDB.DiscordUtils.rerenderAll();
+				BDFDB.ModalUtils.open(this, {
+					header: "PLUGIN WAS DISCONTINUED",
+					children: [
+						BDFDB.ReactUtils.createElement("span", {children: "DISCORD ADDED THIS FEATURE BY THEMSELVES, MAKING THIS PLUGIN USELESS "}),
+						BDFDB.ReactUtils.createElement("strong", {children: "DELETE"}),
+						BDFDB.ReactUtils.createElement("span", {children: " TO REMOVE THIS EMPTY PLUGIN FILE."})
+						BDFDB.ReactUtils.createElement("strong", {children: "DELETE"}),
+						BDFDB.ReactUtils.createElement("span", {children: " TO REMOVE THIS EMPTY PLUGIN FILE."})
+					],
+					buttons: [
+						{contents: "DELETE", close: true, color: "RED", onClick: _ => {
+							BDFDB.LibraryRequires.fs.unlink(BDFDB.LibraryRequires.path.join(BDFDB.BDUtils.getPluginsFolder(), "CreationDate.plugin.js"), error => {});
+							BDFDB.LibraryRequires.fs.unlink(BDFDB.LibraryRequires.path.join(BDFDB.BDUtils.getPluginsFolder(), "CreationDate.config.json"), error => {});
+						}}
+					]
+				});
 			}
 			
-			onStop () {
-				BDFDB.DiscordUtils.rerenderAll();
-			}
-		
-			processGuilds (e) {
-				let [children, index] = BDFDB.ReactUtils.findParent(e.returnvalue, {name: "UnreadDMs"});
-				if (index > -1) children.splice(index + 1, 0, BDFDB.ReactUtils.createElement("div", {
-					className: BDFDB.disCNS.guildouter + BDFDB.disCN._servercounterservercountwrap,
-					children: BDFDB.ReactUtils.createElement("div", {
-						className: BDFDB.disCNS.guildslabel + BDFDB.disCN._servercounterservercount,
-						children: `${BDFDB.LanguageUtils.LanguageStrings.SERVERS} – ${BDFDB.LibraryModules.SortedGuildUtils.getFlattenedGuildIds().length}`
-					})
-				}));
-			}
+			onStop () {}
 		};
 	})(window.BDFDB_Global.PluginUtils.buildPlugin(changeLog));
 })();
