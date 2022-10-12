@@ -4,7 +4,7 @@
  * @version 2.6.6
  * @description Required Library for DevilBro's Plugins
  * @source https://github.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Library/
- * @updateUrl https://raw.githubusercontent.com/2l47/mwittrien-BetterDiscordAddons/tree/preserve-ShowHiddenChannels/Library/0BDFDB.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/2l47/mwittrien-BetterDiscordAddons/preserve-ShowHiddenChannels/Library/0BDFDB.plugin.js
  */
 
 module.exports = (_ => {
