@@ -488,7 +488,7 @@ module.exports = (_ => {
 				let lightTheme = BDFDB.DiscordUtils.getTheme() == BDFDB.disCN.themelight;
 				
 				let addUser = (id, users) => {
-					let user = BDFDB.LibraryModules.UserStore.getUser(id);
+					let user = BDFDB.LibraryStores.UserStore.getUser(id);
 					if (user) users.push(Object.assign({}, user, BDFDB.LibraryModules.MemberStore.getMember(guild.id, id) || {}));
 					else users.push({id: id, username: `UserId: ${id}`, fetchable: true});
 				};
