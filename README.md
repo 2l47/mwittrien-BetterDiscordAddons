@@ -1,3 +1,6 @@
+# Broken by Discord/BD updates. I recommend using JustOptimize's rewrite of this plugin's functionality instead: https://github.com/JustOptimize/return-ShowHiddenChannels
+
+
 # [BetterDiscord](https://github.com/BetterDiscord/BetterDiscord) Addons [![GitHub issues][github-badge]][github-link] [![Support Server][discord-badge]][discord-invite]
 
 [github-badge]: https://img.shields.io/github/issues/2l47/mwittrien-BetterDiscordAddons.svg
